@@ -1,21 +1,30 @@
 discord.on('MESSAGE_CREATE', async (message) => {
+  var msg = message.content.toLowerCase();
+
   if (
-    message.content.toLowerCase().includes('store.steampowered.com') ||
-    message.content.toLowerCase().includes('steamcommunity.com')
+    msg.includes('store.steampowered.com') ||
+    msg.includes('steamcommunity.com')
   ) {
-    var reply = message.content.toLowerCase();
+    var urls = msg.match(
+      /https?:\/\/(store\.steampowered\.com|(www\.)?steamcommunity\.com)(\/([-a-zA-Z0-9()@:%_\+.~#?&//=]*))?/g
+    );
+    if (urls != null && urls.length > 0) {
+      var reply = '';
+      urls.forEach((element) => (reply = reply + element + '\n'));
+      const richEmbed = new discord.Embed();
+      richEmbed.setColor(0x00ff00);
+      richEmbed.addField({
+        name: 'Links',
+        value: reply,
+        inline: false,
+      });
 
-    reply = reply
-      .replaceAll(
-        'https://store.steampowered.com',
-        'steam://openurl/https://store.steampowered.com'
-      )
-      .replaceAll(
-        'https://steamcommunity.com',
-        'steam://openurl/https://steamcommunity.com'
-      );
-    console.debug('reply:' + reply);
+      console.debug('urls:' + urls);
 
-    await message.reply(reply);
+      console.debug('content:' + Object.keys(message));
+
+      console.debug('reply:' + reply);
+      await message.reply(richEmbed);
+    }
   }
 });
