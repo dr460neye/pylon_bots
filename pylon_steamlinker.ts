@@ -10,7 +10,13 @@ discord.on('MESSAGE_CREATE', async (message) => {
     );
     if (urls != null && urls.length > 0) {
       var reply = '';
-      urls.forEach((element) => (reply = reply + element + '\n'));
+      urls.forEach(
+        (element) =>
+          (reply =
+            reply +
+            element.replaceAll('https://', 'steam://openurl/https://') +
+            '\n')
+      );
       const richEmbed = new discord.Embed();
       richEmbed.setColor(0x00ff00);
       richEmbed.addField({
